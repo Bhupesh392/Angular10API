@@ -11,7 +11,13 @@
 
   <ItemGroup>
     <Folder Include="Photos\" />
+    <Folder Include="MocDB\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
 
+  <ItemGroup>
+    <None Remove="MocDB\" />
+    <None Remove="Helpers\" />
+  </ItemGroup>
 </Project>
