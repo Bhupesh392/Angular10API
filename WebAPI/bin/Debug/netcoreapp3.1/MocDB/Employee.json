@@ -1,0 +1,23 @@
+﻿[
+  {
+    "EmployeeId": 1,
+    "EmployeeName": "Bhupesh Sharma",
+    "Department": "IT",
+    "DateOfJoining": "2020-04-20",
+    "PhotoFileName": "https://cdn-icons-png.flaticon.com/512/1869/1869679.png"
+  },
+  {
+    "EmployeeId": 2,
+    "EmployeeName": "Jyanth",
+    "Department": "IT",
+    "DateOfJoining": "2021-04-20",
+    "PhotoFileName": "https://cdn-icons-png.flaticon.com/512/1869/1869679.png"
+  },
+  {
+    "EmployeeId": 3,
+    "EmployeeName": "Soniya Rawat",
+    "Department": "IT",
+    "DateOfJoining": "2019-04-20",
+    "PhotoFileName": "https://cdn-icons-png.flaticon.com/512/1869/1869679.png"
+  }
+]
