@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Data.SqlClient;
 using System.Data;
 using WebAPI.Models;
 using Newtonsoft.Json;
@@ -31,24 +28,6 @@ namespace WebAPI.Controllers
             
             DataTable table = new DataTable();
 
-            /* Below code is for SQL DB purpose uncomment and use this one
-            tring query = @"
-             select DepartmentId, DepartmentName from dbo.Department";
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using(SqlConnection myCon=new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
-
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
-            */
             using (StreamReader r = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"MocDB", "department.json")))
             {
                 string json = r.ReadToEnd();
@@ -62,26 +41,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public JsonResult Post(Department dep)
         {
-            //string query = @"
-            //        insert into dbo.Department values 
-            //        ('"+dep.DepartmentName+@"')
-            //        ";
-            //DataTable table = new DataTable();
-            //string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            //SqlDataReader myReader;
-            //using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            //{
-            //    myCon.Open();
-            //    using (SqlCommand myCommand = new SqlCommand(query, myCon))
-            //    {
-            //        myReader = myCommand.ExecuteReader();
-            //        table.Load(myReader); ;
-
-            //        myReader.Close();
-            //        myCon.Close();
-            //    }
-            //}
-            if (dep.DepartmentId != 0)
+            if (dep.DepartmentId != 0 && !string.IsNullOrEmpty(dep.DepartmentName))
             {
                 List<Department> departments = new List<Department>();
                 JSONReadWrite readWrite = new JSONReadWrite();
@@ -105,7 +65,7 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return new JsonResult("Department Id can't be 0 or empty!!!");
+                return new JsonResult("Department can't be null or empty!!");
             }
         }
 
@@ -113,53 +73,35 @@ namespace WebAPI.Controllers
         [HttpPut]
         public JsonResult Put(Department dep)
         {
-            string query = @"
-                    update dbo.Department set 
-                    DepartmentName = '"+dep.DepartmentName+@"'
-                    where DepartmentId = "+dep.DepartmentId + @" 
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            if (dep.DepartmentId != 0 && !string.IsNullOrEmpty(dep.DepartmentName))
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+                List<Department> departments = new List<Department>();
+                JSONReadWrite readWrite = new JSONReadWrite();
+                departments = JsonConvert.DeserializeObject<List<Department>>(readWrite.Read("department.json", "MocDB"));
 
-                    myReader.Close();
-                    myCon.Close();
-                }
+                departments.FirstOrDefault(x => x.DepartmentId == dep.DepartmentId).DepartmentName = dep.DepartmentName;
+                
+                string jSONString = JsonConvert.SerializeObject(departments);
+                readWrite.Write("department.json", "MocDB", jSONString);
+
+                return new JsonResult("Updated Successfully");
             }
 
-            return new JsonResult("Updated Successfully");
+            return new JsonResult("Not Updated!!");
         }
 
 
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"
-                    delete from dbo.Department
-                    where DepartmentId = " + id + @" 
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            List<Department> departments = new List<Department>();
+            JSONReadWrite readWrite = new JSONReadWrite();
+            departments = JsonConvert.DeserializeObject<List<Department>>(readWrite.Read("department.json", "MocDB"));
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
+            departments.RemoveAt(departments.FindIndex(x => x.DepartmentId == id));
+
+            string jSONString = JsonConvert.SerializeObject(departments);
+            readWrite.Write("department.json", "MocDB", jSONString);
 
             return new JsonResult("Deleted Successfully");
         }

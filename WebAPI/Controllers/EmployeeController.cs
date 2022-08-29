@@ -10,6 +10,8 @@ using System.Data;
 using WebAPI.Models;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Newtonsoft.Json;
+using WebAPI.Helpers;
 
 namespace WebAPI.Controllers
 {
@@ -29,26 +31,12 @@ namespace WebAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            string query = @"
-                    select EmployeeId, EmployeeName, Department,
-                    convert(varchar(10),DateOfJoining,120) as DateOfJoining
-                    ,PhotoFileName
-                    from dbo.Employee
-                    ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
 
-                    myReader.Close();
-                    myCon.Close();
-                }
+            using (StreamReader r = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"MocDB", "Employee.json")))
+            {
+                string json = r.ReadToEnd();
+                table = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
             }
 
             return new JsonResult(table);
@@ -58,61 +46,54 @@ namespace WebAPI.Controllers
         [HttpPost]
         public JsonResult Post(Employee emp)
         {
-            string query = @"
-                    insert into dbo.Employee 
-                    (EmployeeName,Department,DateOfJoining,PhotoFileName)
-                    values 
-                    (
-                    '" + emp.EmployeeName + @"'
-                    ,'" + emp.Department + @"'
-                    ,'" + emp.DateOfJoining + @"'
-                    ,'" + emp.PhotoFileName + @"'
-                    )
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            emp.EmployeeId = new Random().Next();
+            List<Employee> employees = new List<Employee>();
+            JSONReadWrite readWrite = new JSONReadWrite();
+            employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
 
-                    myReader.Close();
-                    myCon.Close();
-                }
+            Employee employee = employees.FirstOrDefault(x => x.EmployeeName.Equals(emp.EmployeeName));
+
+            if (employee == null)
+            {
+                employees.Add(emp);
             }
+            else
+            {
+                //int index = departments.FindIndex(x => x.DepartmentId== dep.DepartmentId);
+                //departments[index] = department;
+                return new JsonResult("Employee Already Exists!!! Pick a different Employee Name!!!");
+            }
+            string jSONString = JsonConvert.SerializeObject(employees);
+            readWrite.Write("Employee.json", "MocDB", jSONString);
 
             return new JsonResult("Added Successfully");
+
         }
 
 
         [HttpPut]
         public JsonResult Put(Employee emp)
         {
-            string query = @"
-                    update dbo.Employee set 
-                    EmployeeName = '" + emp.EmployeeName + @"'
-                    ,Department = '" + emp.Department + @"'
-                    ,DateOfJoining = '" + emp.DateOfJoining + @"'
-                    where EmployeeId = " + emp.EmployeeId + @" 
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
+            if (emp.EmployeeId != 0)
             {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+                List<Employee> employees = new List<Employee>();
+                JSONReadWrite readWrite = new JSONReadWrite();
+                employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
 
-                    myReader.Close();
-                    myCon.Close();
+                Employee updatedEmp = employees.FirstOrDefault(x => x.EmployeeId == emp.EmployeeId);
+
+                if (updatedEmp != null)
+                {
+                    updatedEmp.EmployeeName = emp.EmployeeName;
+                    updatedEmp.Department = emp.Department;
+                    updatedEmp.DateOfJoining = emp.DateOfJoining;
+                    updatedEmp.PhotoFileName = emp.PhotoFileName;
                 }
+
+                string jSONString = JsonConvert.SerializeObject(employees);
+                readWrite.Write("Employee.json", "MocDB", jSONString);
+
+                return new JsonResult("Updated Successfully");
             }
 
             return new JsonResult("Updated Successfully");
@@ -122,25 +103,14 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public JsonResult Delete(int id)
         {
-            string query = @"
-                    delete from dbo.Employee
-                    where EmployeeId = " + id + @" 
-                    ";
-            DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
+            List<Employee> employees = new List<Employee>();
+            JSONReadWrite readWrite = new JSONReadWrite();
+            employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
 
-                    myReader.Close();
-                    myCon.Close();
-                }
-            }
+            employees.RemoveAt(employees.FindIndex(x => x.EmployeeId == id));
+
+            string jSONString = JsonConvert.SerializeObject(employees);
+            readWrite.Write("Employee.json", "MocDB", jSONString);
 
             return new JsonResult("Deleted Successfully");
         }
@@ -157,7 +127,7 @@ namespace WebAPI.Controllers
                 string filename = postedFile.FileName;
                 var physicalPath = _env.ContentRootPath + "/Photos/" + filename;
 
-                using(var stream = new FileStream(physicalPath, FileMode.Create))
+                using (var stream = new FileStream(physicalPath, FileMode.Create))
                 {
                     postedFile.CopyTo(stream);
                 }
@@ -175,23 +145,12 @@ namespace WebAPI.Controllers
         [Route("GetAllDepartmentNames")]
         public JsonResult GetAllDepartmentNames()
         {
-            string query = @"
-                    select DepartmentName from dbo.Department
-                    ";
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("EmployeeAppCon");
-            SqlDataReader myReader;
-            using (SqlConnection myCon = new SqlConnection(sqlDataSource))
-            {
-                myCon.Open();
-                using (SqlCommand myCommand = new SqlCommand(query, myCon))
-                {
-                    myReader = myCommand.ExecuteReader();
-                    table.Load(myReader); ;
 
-                    myReader.Close();
-                    myCon.Close();
-                }
+            using (StreamReader r = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"MocDB", "department.json")))
+            {
+                string json = r.ReadToEnd();
+                table = (DataTable)JsonConvert.DeserializeObject(json, (typeof(DataTable)));
             }
 
             return new JsonResult(table);
