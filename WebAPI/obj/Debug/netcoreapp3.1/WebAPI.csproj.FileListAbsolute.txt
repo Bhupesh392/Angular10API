@@ -62,6 +62,8 @@ C:/Users/sagar/Desktop/Angular10dotNETCoreAPI-master/WebAPI/WebAPI/obj/Debug/net
 C:/Users/sagar/Desktop/Angular10dotNETCoreAPI-master/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.genruntimeconfig.cache
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/appsettings.Development.json
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/appsettings.json
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/MocDB/department.json
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/MocDB/Employee.json
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/WebAPI.StaticWebAssets.xml
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/WebAPI.deps.json
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/WebAPI.runtimeconfig.json
@@ -78,7 +80,6 @@ C:/Users/sagar/Desktop/Angular10dotNETCoreAPI-master/WebAPI/WebAPI/obj/Debug/net
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/runtimes/win-x86/native/sni.dll
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll
-/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.csproj.AssemblyReference.cache
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.GeneratedMSBuildEditorConfig.editorconfig
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.AssemblyInfoInputs.cache
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.AssemblyInfo.cs
@@ -90,5 +91,3 @@ C:/Users/sagar/Desktop/Angular10dotNETCoreAPI-master/WebAPI/WebAPI/obj/Debug/net
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.dll
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.pdb
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.genruntimeconfig.cache
-/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/MocDB/department.json
-/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/MocDB/Employee.json

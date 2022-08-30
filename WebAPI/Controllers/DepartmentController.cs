@@ -8,6 +8,7 @@ using WebAPI.Models;
 using Newtonsoft.Json;
 using System.IO;
 using WebAPI.Helpers;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace WebAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public JsonResult Get()
         {
-            
+
             DataTable table = new DataTable();
 
             using (StreamReader r = new StreamReader(Path.Combine(Environment.CurrentDirectory, @"MocDB", "department.json")))
@@ -39,7 +40,7 @@ namespace WebAPI.Controllers
 
 
         [HttpPost]
-        public JsonResult Post(Department dep)
+        public IActionResult Post(Department dep)
         {
             if (dep.DepartmentId != 0 && !string.IsNullOrEmpty(dep.DepartmentName))
             {
@@ -65,13 +66,15 @@ namespace WebAPI.Controllers
             }
             else
             {
-                return new JsonResult("Department can't be null or empty!!");
+                var modelState = new ModelStateDictionary();
+                modelState.AddModelError("DepartmentName", "Department Name is required.");
+                return BadRequest(modelState);
             }
         }
 
 
         [HttpPut]
-        public JsonResult Put(Department dep)
+        public IActionResult Put(Department dep)
         {
             if (dep.DepartmentId != 0 && !string.IsNullOrEmpty(dep.DepartmentName))
             {
@@ -80,30 +83,49 @@ namespace WebAPI.Controllers
                 departments = JsonConvert.DeserializeObject<List<Department>>(readWrite.Read("department.json", "MocDB"));
 
                 departments.FirstOrDefault(x => x.DepartmentId == dep.DepartmentId).DepartmentName = dep.DepartmentName;
-                
+
                 string jSONString = JsonConvert.SerializeObject(departments);
                 readWrite.Write("department.json", "MocDB", jSONString);
 
                 return new JsonResult("Updated Successfully");
             }
 
-            return new JsonResult("Not Updated!!");
+            var modelState = new ModelStateDictionary();
+            modelState.AddModelError("DepartmentName", "Department Name is required.");
+            return BadRequest(modelState);
         }
 
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             List<Department> departments = new List<Department>();
             JSONReadWrite readWrite = new JSONReadWrite();
             departments = JsonConvert.DeserializeObject<List<Department>>(readWrite.Read("department.json", "MocDB"));
 
-            departments.RemoveAt(departments.FindIndex(x => x.DepartmentId == id));
+            if (departments.FindIndex(x => x.DepartmentId == id) >= 0)
+            {
+                departments.RemoveAt(departments.FindIndex(x => x.DepartmentId == id));
+            }
+            else
+            {
+                var modelState = new ModelStateDictionary();
+                modelState.AddModelError("DepartmentName", "Department Name is required.");
+                return NotFound();
+            }
 
             string jSONString = JsonConvert.SerializeObject(departments);
             readWrite.Write("department.json", "MocDB", jSONString);
 
             return new JsonResult("Deleted Successfully");
+        }
+
+        public IEnumerable<Department> GetAllDept()
+        {
+            List<Department> departments = new List<Department>();
+            JSONReadWrite readWrite = new JSONReadWrite();
+            departments = JsonConvert.DeserializeObject<List<Department>>(readWrite.Read("department.json", "MocDB"));
+            return departments;
         }
     }
 }
