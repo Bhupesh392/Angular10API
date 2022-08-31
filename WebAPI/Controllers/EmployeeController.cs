@@ -12,6 +12,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using WebAPI.Helpers;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace WebAPI.Controllers
 {
@@ -27,6 +28,7 @@ namespace WebAPI.Controllers
             _configuration = configuration;
             _env = env;
         }
+        public EmployeeController() { }
 
         [HttpGet]
         public JsonResult Get()
@@ -42,39 +44,44 @@ namespace WebAPI.Controllers
             return new JsonResult(table);
         }
 
-
         [HttpPost]
-        public JsonResult Post(Employee emp)
+        public IActionResult Post(Employee emp)
         {
-            emp.EmployeeId = new Random().Next();
-            List<Employee> employees = new List<Employee>();
-            JSONReadWrite readWrite = new JSONReadWrite();
-            employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
-
-            Employee employee = employees.FirstOrDefault(x => x.EmployeeName.Equals(emp.EmployeeName));
-
-            if (employee == null)
+            if (!string.IsNullOrEmpty(emp.EmployeeName))
             {
-                employees.Add(emp);
-            }
-            else
-            {
-                //int index = departments.FindIndex(x => x.DepartmentId== dep.DepartmentId);
-                //departments[index] = department;
-                return new JsonResult("Employee Already Exists!!! Pick a different Employee Name!!!");
-            }
-            string jSONString = JsonConvert.SerializeObject(employees);
-            readWrite.Write("Employee.json", "MocDB", jSONString);
+                emp.EmployeeId = new Random().Next();
+                List<Employee> employees = new List<Employee>();
+                JSONReadWrite readWrite = new JSONReadWrite();
+                employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
 
-            return new JsonResult("Added Successfully");
+                Employee employee = employees.FirstOrDefault(x => x.EmployeeName.Equals(emp.EmployeeName));
+
+                if (employee == null)
+                {
+                    employees.Add(emp);
+                }
+                else
+                {
+                    //int index = departments.FindIndex(x => x.DepartmentId== dep.DepartmentId);
+                    //departments[index] = department;
+                    return new JsonResult("Employee Already Exists!!! Pick a different Employee Name!!!");
+                }
+                string jSONString = JsonConvert.SerializeObject(employees);
+                readWrite.Write("Employee.json", "MocDB", jSONString);
+
+                return new JsonResult("Added Successfully");
+            }
+            var modelState = new ModelStateDictionary();
+            modelState.AddModelError("EmployeeName", "Employee Name is required.");
+            return BadRequest(modelState);
 
         }
 
 
         [HttpPut]
-        public JsonResult Put(Employee emp)
+        public IActionResult Put(Employee emp)
         {
-            if (emp.EmployeeId != 0)
+            if (emp.EmployeeId != 0 && !string.IsNullOrEmpty(emp.EmployeeName))
             {
                 List<Employee> employees = new List<Employee>();
                 JSONReadWrite readWrite = new JSONReadWrite();
@@ -96,18 +103,29 @@ namespace WebAPI.Controllers
                 return new JsonResult("Updated Successfully");
             }
 
-            return new JsonResult("Updated Successfully");
+            var modelState = new ModelStateDictionary();
+            modelState.AddModelError("EmployeeName", "Employee Name is required.");
+            return BadRequest(modelState);
         }
 
 
         [HttpDelete("{id}")]
-        public JsonResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             List<Employee> employees = new List<Employee>();
             JSONReadWrite readWrite = new JSONReadWrite();
             employees = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
 
-            employees.RemoveAt(employees.FindIndex(x => x.EmployeeId == id));
+            if (employees.FindIndex(x => x.EmployeeId == id) >= 0)
+            {
+                employees.RemoveAt(employees.FindIndex(x => x.EmployeeId == id));
+            }
+            else
+            {
+                var modelState = new ModelStateDictionary();
+                modelState.AddModelError("DepartmentName", "Department Name is required.");
+                return NotFound();
+            }
 
             string jSONString = JsonConvert.SerializeObject(employees);
             readWrite.Write("Employee.json", "MocDB", jSONString);
@@ -156,6 +174,12 @@ namespace WebAPI.Controllers
             return new JsonResult(table);
         }
 
-
+        public IEnumerable<Employee> GetAllEmp()
+        {
+            List<Employee> departments = new List<Employee>();
+            JSONReadWrite readWrite = new JSONReadWrite();
+            departments = JsonConvert.DeserializeObject<List<Employee>>(readWrite.Read("Employee.json", "MocDB"));
+            return departments;
+        }
     }
 }

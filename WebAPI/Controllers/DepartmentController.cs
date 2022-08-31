@@ -23,6 +23,8 @@ namespace WebAPI.Controllers
             _configuration = configuration;
         }
 
+        public DepartmentController() { }
+
         [HttpGet]
         public JsonResult Get()
         {
