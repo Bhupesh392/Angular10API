@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,5 +20,6 @@
   <ItemGroup>
     <None Remove="MocDB\" />
     <None Remove="Helpers\" />
+    <None Remove="Swashbuckle.AspNetCore" />
   </ItemGroup>
 </Project>

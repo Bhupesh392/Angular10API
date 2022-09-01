@@ -161,6 +161,7 @@ namespace WebAPI.Controllers
 
 
         [Route("GetAllDepartmentNames")]
+        [HttpGet]
         public JsonResult GetAllDepartmentNames()
         {
             DataTable table = new DataTable();
@@ -174,6 +175,7 @@ namespace WebAPI.Controllers
             return new JsonResult(table);
         }
 
+        [NonAction]
         public IEnumerable<Employee> GetAllEmp()
         {
             List<Employee> departments = new List<Employee>();

@@ -122,6 +122,7 @@ namespace WebAPI.Controllers
             return new JsonResult("Deleted Successfully");
         }
 
+        [NonAction]
         public IEnumerable<Department> GetAllDept()
         {
             List<Department> departments = new List<Department>();

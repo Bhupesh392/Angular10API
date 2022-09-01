@@ -34,6 +34,18 @@ namespace WebAPI
                  .AllowAnyHeader());
             });
 
+            //registering swagger generation
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "EmployeeManagenetPortal Swagger API",
+                    Description = "An Asp.net Core Web API for Employee Management Portal"
+                });
+
+            });
+
             //JSON Serializer
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(options =>
@@ -49,6 +61,16 @@ namespace WebAPI
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "EmployeeManagementPortal API");
+            });
 
             if (env.IsDevelopment())
             {
@@ -68,8 +90,8 @@ namespace WebAPI
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(),"Photos")),
-                RequestPath="/Photos"
+                    Path.Combine(Directory.GetCurrentDirectory(), "Photos")),
+                RequestPath = "/Photos"
             });
         }
     }
