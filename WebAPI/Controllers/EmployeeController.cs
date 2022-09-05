@@ -28,7 +28,6 @@ namespace WebAPI.Controllers
             _configuration = configuration;
             _env = env;
         }
-        public EmployeeController() { }
 
         [HttpGet]
         public JsonResult Get()
