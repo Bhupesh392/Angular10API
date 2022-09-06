@@ -97,3 +97,7 @@ C:/Users/sagar/Desktop/Angular10dotNETCoreAPI-master/WebAPI/WebAPI/obj/Debug/net
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.pdb
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.genruntimeconfig.cache
 /Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/obj/Debug/netcoreapp3.1/WebAPI.csproj.AssemblyReference.cache
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/Autofac.dll
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/Autofac.Extensions.DependencyInjection.dll
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll
+/Users/bhupeshsharma/Downloads/WebAPIAngular10/WebAPI/WebAPI/bin/Debug/netcoreapp3.1/System.Diagnostics.DiagnosticSource.dll

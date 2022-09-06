@@ -12,6 +12,10 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using WebAPI.Implementation;
+using WebAPI.Interface;
 
 namespace WebAPI
 {
@@ -24,8 +28,10 @@ namespace WebAPI
 
         public IConfiguration Configuration { get; }
 
+        public IContainer ApplicationContainer { get; private set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //Enable CORS
             services.AddCors(c =>
@@ -55,6 +61,15 @@ namespace WebAPI
                 = new DefaultContractResolver());
 
             services.AddControllers();
+
+            // Create the container builder.
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterType<DataProvider>().As<IDataProvider>();
+            this.ApplicationContainer = builder.Build();
+
+            // Create the IServiceProvider based on the container.
+            return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

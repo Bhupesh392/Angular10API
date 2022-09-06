@@ -8,6 +8,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.9" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Autofac" Version="6.4.0" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,5 +23,7 @@
     <None Remove="MocDB\" />
     <None Remove="Helpers\" />
     <None Remove="Swashbuckle.AspNetCore" />
+    <None Remove="Autofac" />
+    <None Remove="Autofac.Extensions.DependencyInjection" />
   </ItemGroup>
 </Project>

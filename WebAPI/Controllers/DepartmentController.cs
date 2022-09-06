@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Data;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System.Data;
-using WebAPI.Models;
-using Newtonsoft.Json;
-using System.IO;
-using WebAPI.Helpers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
+
+using WebAPI.Models;
+using WebAPI.Helpers;
 
 namespace WebAPI.Controllers
 {
